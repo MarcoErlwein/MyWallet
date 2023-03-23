@@ -1,0 +1,54 @@
+﻿@page "/MyWallet"
+
+@using StrommarMember.Mobile7.Components.PayPal;
+@using StrommarMember.Mobile7.Pages.MyWallet;
+@using StrommarMember.Mobile7.Resources.Languages.MyWallet;
+
+@inject IStringLocalizer<RWallet> localizer
+
+@inherits MyWalletBase
+
+<div class="row mb-4">
+    <div class="col-12 position-relative p-0" >
+
+        <div class="row m-1" style="border:2px solid white; border-radius:5px;">
+            <p class="textNameAlerts-Strommar mt-2 m-1 text-justify" style="color:white;">
+                @localizer["TextCabecera1"] <span style="color:#00DA77;">@BalanceMember</span> @localizer["TextCabecera2"]. @localizer["TextSubCabecera"]
+        </p>                
+        <div class="row align-items-center mb-3">
+            @foreach (Funds item in FundsList)
+            {
+                <div class="col-4 mb-3 d-flex justify-content-center">
+                    <span class="p-2 textNameAlerts-Strommar" style=" text-align:center; font-size:14px; font-weight:400; cursor: pointer; padding-right:20px;color:@(typeSelected == item.type?"#3861EF":"");" @onclick="@(() => ChangeAmount(@item.type))">$@item.type.ToString()</span>
+                    
+                </div>
+            }
+        </div>
+            <div class="row mt-3" style="padding-right:0; padding-left:24px;">
+                <div class="col-6" style="text-align: center;">
+                    <button class="btn btn-Save-Calendar-Strommar" style="min-width:126px;" type="button" @onclick:stopPropagation="true" @onclick="@(() => GenerarPaypal())">@localizer["btnSubmit"]</button>
+                </div>
+
+                <div class="col-6" style="text-align: center;">
+                    <button class="btn btn-Delete-Calendar-Strommar" style="min-width:126px;" type="button" @onclick:stopPropagation="true" @onclick="@(() => btnCancelar())">@localizer["btnCancel"]</button>
+                </div>
+
+        </div>
+        
+            <div class="row mt-5 align-items-center mb-3" >
+                @if (typeSelected != 0)
+            {
+                    <div class="col-12 mb-3 textNameAlerts-Strommar text-justify" style="color:white;">
+                        @localizer["textFooter1"] <span style="color:#00DA77;">@BalanceMemberSelected</span> @localizer["textFooter2"]
+                </div>
+            }
+            @if (IsSubmit == true && typeSelected != 0)
+            {
+                    <div class="col-12 p-1" style=" display: flex; justify-content: center;">
+                    <PaymentServiceButton DotNetReference="@dotNetHelper" OnApproveFunctionName="OnApprovedMyWalletPaymentService" type="@typeSelected" />
+                </div>
+            }
+            </div>
+        </div>
+    </div>
+</div>
